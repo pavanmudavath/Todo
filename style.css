@@ -1,0 +1,16 @@
+/* ul{
+    list-style-type:none;
+    padding:0;
+}
+.todo-item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+.todo-item li{
+    margin-right: 10px ;
+}
+.todo-item button{
+    margin-left: 0px;
+} */
