@@ -68,3 +68,85 @@ inputText.addEventListener("keydown",(event)=>{
     // inputText.value="";
     // }
 
+
+
+    //Qoute of the Day.
+    // const record =document.getElementById("record");
+    // const play =document.getElementById("play");
+    // const pause=document.getElementById("reset");
+    // const reset=document.getElementById("reset");
+ 
+
+//How to turn on the microphone of the computer from javascript.
+//How to how to store that recorded audio in this  localStorage for temperary asap.
+//from store to play
+//pay to pause 
+//reset allow again to restart the paly.
+
+
+//AI CODE these is 
+
+let mediaRecorder;
+        let audioChunks = [];
+        const audioElement = document.getElementById('audio');
+        const recordingStatus = document.getElementById('recordingStatus');
+
+        document.getElementById('record').onclick = async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = []; // Reset chunks for new recording
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64data = reader.result;
+                    localStorage.setItem('quoteAudio', base64data); // Store in localStorage
+                };
+                recordingStatus.textContent = ""; // Clear recording status
+                document.getElementById('stop').disabled = true; // Disable stop button
+            };
+
+            mediaRecorder.start();
+            recordingStatus.textContent = "Recording... (Click 'Stop' to finish)";
+            document.getElementById('stop').disabled = false; // Enable stop button
+
+            // Automatically stop recording after a maximum duration (e.g., 15 seconds)
+            setTimeout(() => {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                }
+            }, 15000); // Set this to 5000, 10000, or 15000 ms as needed
+        };
+
+        document.getElementById('stop').onclick = () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop(); // Stop recording manually
+            }
+        };
+
+        document.getElementById('play').onclick = () => {
+            const audioData = localStorage.getItem('quoteAudio');
+            if (audioData) {
+                audioElement.src = audioData;
+                audioElement.play();
+            }
+        };
+
+        document.getElementById('pause').onclick = () => {
+            audioElement.pause();
+        };
+
+        document.getElementById('reset').onclick = () => {
+            audioElement.pause();
+            audioElement.currentTime = 0; // Reset playback position
+            localStorage.removeItem('quoteAudio'); // Clear stored audio
+        };
+
+    
+
+
